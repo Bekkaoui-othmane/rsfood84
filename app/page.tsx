@@ -1,16 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { FaInstagram, FaSnapchatGhost, FaTiktok } from "react-icons/fa";
 import GoogleMap from "@/components/GoogleMap";
+import MenuCarousel from "@/components/MenuCarousel";
+import FormulesCarousel from "@/components/FormulesCarousel";
 
 export default function Home() {
   return (
     <div className="w-full flex flex-col">
-      {/* 0. BanniÃ¨re Logo (Fond Noir) */}
+      {/* 0. Bannière Logo (Fond Noir) */}
       <section className="w-full bg-black flex flex-col md:flex-row items-center justify-center py-6 md:py-10 border-b border-[#1F1F1F] shadow-[0_4px_20px_rgba(0,0,0,0.5)] z-20 relative px-4 gap-6 md:gap-12">
         
-        {/* RÃ©seaux sociaux (Boutons flottants Ã  gauche sur Desktop, empilÃ©s en haut sur Mobile) */}
+        {/* Réseaux sociaux (Boutons flottants à gauche sur Desktop, empilés en haut sur Mobile) */}
         <div className="w-full md:w-auto md:absolute md:left-8 top-1/2 md:-translate-y-1/2 flex flex-row md:flex-col justify-center gap-6 z-30">
           <a href="https://www.instagram.com/rsfood84_/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[#1A1A1A] border border-[#333] flex items-center justify-center text-white transition-all duration-300 hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:scale-110 shadow-lg" aria-label="Instagram">
             <FaInstagram size={24} />
@@ -44,9 +46,34 @@ export default function Home() {
             L&apos;excellence du Fast Food
           </p>
         </div>
+
+        {/* Contact (Numéro et Adresse flottants à droite sur Desktop, empilés sur Mobile) */}
+        <div className="w-full md:w-auto md:absolute md:right-8 top-1/2 md:-translate-y-1/2 flex flex-col justify-center items-center md:items-end gap-3 z-30">
+          <a 
+            href="https://maps.google.com/?q=80+Rue+de+la+Paix,+84310+Morières-lès-Avignon" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-start gap-2 text-gray-300 hover:text-white font-medium font-[family-name:var(--font-inter)] text-sm md:text-base transition-colors group"
+          >
+            <MapPin size={18} className="text-[var(--orange)] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
+            <span className="text-right leading-snug group-hover:underline">
+              80 Rue de la Paix,
+              84310 <br />Morières-lès-Avignon
+            </span>
+          </a>
+          <a href="tel:+33699569511" className="text-[var(--orange)] font-bold text-lg md:text-xl hover:underline flex items-center gap-2 transition-transform hover:scale-105">
+            <Phone size={20} className="text-[var(--orange)] shrink-0" />
+            <span>06 99 56 95 11</span>
+          </a>
+        </div>
       </section>
 
-      {/* 1. Section Hero (Split Screen : Texte gauche / VidÃ©o droite) */}
+      {/* 0.5 Carrousel Produit */}
+      <section className="w-full bg-[#0D0D0D] border-b border-[#1F1F1F]">
+        <MenuCarousel />
+      </section>
+
+      {/* 1. Section Hero (Split Screen : Texte gauche / Vidéo droite) */}
       <section className="w-full max-w-7xl mx-auto px-6 py-12 md:py-24 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
         {/* Text Content (Left) */}
         <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left z-20">
@@ -55,8 +82,8 @@ export default function Home() {
             <span className="text-[var(--orange)]">Rs Food84</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-lg font-[family-name:var(--font-inter)] leading-relaxed">
-            DÃ©couvrez nos burgers, sandwichs et poutines prÃ©parÃ©s avec passion. 
-            Commandez en ligne et venez rÃ©cupÃ©rer votre repas !
+            Découvrez nos burgers, sandwichs et poutines préparés avec passion. 
+            Commandez en ligne et venez récupérer votre repas !
           </p>
           <Link 
             href="/menu" 
@@ -68,7 +95,7 @@ export default function Home() {
 
         {/* Video Content (Right) */}
         <div className="flex-1 w-full max-w-sm relative flex justify-center items-center z-10 mx-auto">
-          {/* Lueur dÃ©corative derriÃ¨re la vidÃ©o */}
+          {/* Lueur décorative derrière la vidéo */}
           <div className="absolute inset-0 bg-[var(--orange)]/30 blur-3xl rounded-full scale-90" />
           
           <video
@@ -79,9 +106,14 @@ export default function Home() {
             className="w-full h-auto max-h-[600px] object-cover rounded-[2rem] shadow-2xl relative z-10 border border-[var(--border-color)]"
           >
             <source src="/videos/video_riz.mp4" type="video/mp4" />
-            Votre navigateur ne supporte pas la balise vidÃ©o.
+            Votre navigateur ne supporte pas la balise vidéo.
           </video>
         </div>
+      </section>
+
+      {/* 1.5 Section Carrousel Formules / Menus */}
+      <section className="w-full bg-[#0D0D0D] border-t border-b border-[#1F1F1F]">
+        <FormulesCarousel />
       </section>
 
       {/* 2. Section Informations (Horaires / Adresse) */}
@@ -92,13 +124,13 @@ export default function Home() {
           <ul className="space-y-4 w-full max-w-sm text-gray-300 font-[family-name:var(--font-inter)]">
             <li className="flex justify-between items-center pb-2 border-b border-[#1F1F1F]">
               <span>Mardi</span>
-              <span className="text-red-400 font-medium">FermÃ©</span>
+              <span className="text-red-400 font-medium">Fermé</span>
             </li>
             <li className="flex justify-between items-center pb-2">
               <span>Mercredi - Lundi</span>
               <span className="text-white font-medium text-right">
-                11h30 â 14h30<br/>
-                18h00 â 23h00
+                11h30 - 14h30<br/>
+                18h00 - 23h00
               </span>
             </li>
           </ul>
@@ -110,10 +142,11 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-white mb-4 font-[family-name:var(--font-outfit)]">Notre Adresse</h2>
           <p className="text-xl text-gray-300 font-[family-name:var(--font-inter)]">
             80 Rue de la Paix<br/>
-            84310 MoriÃ¨res-lÃ¨s-Avignon
+            84310 Morières-lès-Avignon
           </p>
-          <a href="tel:0699569511" className="mt-6 text-lg text-[var(--orange)] font-semibold hover:underline">
-            ð 06 99 56 95 11
+          <a href="tel:0699569511" className="mt-6 text-lg text-[var(--orange)] font-semibold hover:underline flex items-center justify-center gap-2">
+            <Phone size={24} />
+            06 99 56 95 11
           </a>
         </div>
       </section>

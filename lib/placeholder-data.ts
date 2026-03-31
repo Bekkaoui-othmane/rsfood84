@@ -6,82 +6,86 @@ export const produitsInitialData = [
   // 🍔 BURGERS
   // =====================
   {
-    nom: "Big Burger",
-    description: "Burger à double étage, double steak, cheddar, salade",
-    prix: 10.0,
-    image: "/images/Burger/Big.png",
-    categorie: "Burgers",
-    ingredients: [
-      { nom: "Steak", prix: 0, estSuppl: false },
-      { nom: "Cheddar", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false }
-    ]
-  },
-  {
     nom: "Cheese Burger",
     description: "Steak haché, cheddar, cornichons, ketchup, moutarde",
-    prix: 8.5,
+    prix: 3.5,
     image: "/images/Burger/Cheese.png",
     categorie: "Burgers",
     ingredients: [
-      { nom: "Steak", prix: 0, estSuppl: false },
-      { nom: "Cheddar", prix: 0, estSuppl: false },
-      { nom: "Cornichons", prix: 0, estSuppl: false },
-      { nom: "Ketchup", prix: 0, estSuppl: false },
-      { nom: "Moutarde", prix: 0, estSuppl: false }
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné Burger", prix: 2.0, estSuppl: true }
     ]
   },
   {
     nom: "Chicken Burger",
     description: "Poulet pané croustillant, cheddar, salade, tomate",
-    prix: 9.0,
+    prix: 5.0,
     image: "/images/Burger/chicken.png",
     categorie: "Burgers",
     ingredients: [
-      { nom: "Poulet pané", prix: 0, estSuppl: false },
-      { nom: "Cheddar", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false },
-      { nom: "Tomate", prix: 0, estSuppl: false }
-    ]
-  },
-  {
-    nom: "Chicken Beef",
-    description: "Mix poulet pané et steak haché, cheddar, salade",
-    prix: 11.0,
-    image: "/images/Burger/chicken_beef.png",
-    categorie: "Burgers",
-    ingredients: [
-      { nom: "Poulet pané", prix: 0, estSuppl: false },
-      { nom: "Steak haché", prix: 0, estSuppl: false },
-      { nom: "Cheddar", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false }
-    ]
-  },
-  {
-    nom: "Double Bacon",
-    description: "Double steak, double cheddar, tranches de bacon, salade",
-    prix: 11.5,
-    image: "/images/Burger/Double_bacon.png",
-    categorie: "Burgers",
-    ingredients: [
-      { nom: "Double Steak", prix: 0, estSuppl: false },
-      { nom: "Double Cheddar", prix: 0, estSuppl: false },
-      { nom: "Bacon", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false }
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné Burger", prix: 2.0, estSuppl: true }
     ]
   },
   {
     nom: "Double Cheese",
     description: "Double steak, double cheddar, cornichons, oignons",
-    prix: 10.5,
+    prix: 5.0,
     image: "/images/Burger/Double_cheese.png",
     categorie: "Burgers",
     ingredients: [
-      { nom: "Double Steak", prix: 0, estSuppl: false },
-      { nom: "Double Cheddar", prix: 0, estSuppl: false },
-      { nom: "Cornichons", prix: 0, estSuppl: false },
-      { nom: "Oignons", prix: 0, estSuppl: false }
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné Burger", prix: 2.0, estSuppl: true }
     ]
+  },
+  {
+    nom: "Big Burger",
+    description: "Burger à double étage, double steak, cheddar, salade",
+    prix: 6.0,
+    image: "/images/Burger/Big.png",
+    categorie: "Burgers",
+    ingredients: [
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné Burger", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Double Bacon",
+    description: "Double steak, double cheddar, tranches de bacon, salade",
+    prix: 6.0,
+    image: "/images/Burger/Double_bacon.png",
+    categorie: "Burgers",
+    ingredients: [
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné Burger", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Chicken Beef",
+    description: "Mix poulet pané et steak haché, cheddar, salade",
+    prix: 6.5,
+    image: "/images/Burger/chicken_beef.png",
+    categorie: "Burgers",
+    ingredients: [
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné Burger", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Menu RS1",
+    description: "Cheese + Double Cheese + Frites + Boisson",
+    prix: 11.0,
+    image: "/images/Burger/Menu_RS1.png", // Image à changer si besoin
+    categorie: "Formules",
+    ingredients: []
+  },
+  {
+    nom: "Menu RS2",
+    description: "Cheese + Chicken + Frites + Boisson",
+    prix: 11.0,
+    image: "/images/Burger/Menu_RS2.png", // Image à changer si besoin
+    categorie: "Formules",
+    ingredients: []
   },
 
   // =====================
@@ -89,53 +93,41 @@ export const produitsInitialData = [
   // =====================
   {
     nom: "Tacos 1 Viande",
-    description: "Viandes au choix, frites, sauce fromagère",
+    description: "1 Viande au choix, frites, sauce fromagère",
     prix: 8.0,
-    image: "/images/Menu_formule/Fiche_tacos.png",
+    image: "/images/Tacos/Tacos_1v.jpg",
     categorie: "Tacos",
     ingredients: [
-      { nom: "Tenders", prix: 1.5, estSuppl: true },
-      { nom: "Escalope", prix: 0, estSuppl: false },
-      { nom: "Steak", prix: 0, estSuppl: false },
-      { nom: "Cordon Bleu", prix: 0, estSuppl: false },
-      { nom: "Viande Hachée", prix: 0, estSuppl: false },
-      { nom: "Option Gratiné", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné (Mozza, Boursin, Chèvre ou Raclette)", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true },
       { nom: "Frites Cheddar Bacon", prix: 2.0, estSuppl: true },
-      { nom: "Supplément Boisson", prix: 2.0, estSuppl: true }
+      { nom: "Supplément Tenders", prix: 1.5, estSuppl: true }
     ]
   },
   {
     nom: "Tacos 2 Viandes",
-    description: "Viandes au choix, frites, sauce fromagère",
+    description: "2 Viandes au choix, frites, sauce fromagère",
     prix: 9.0,
-    image: "/images/Menu_formule/Fiche_tacos.png",
+    image: "/images/Tacos/Tacos_2v.png",
     categorie: "Tacos",
     ingredients: [
-      { nom: "Tenders", prix: 1.5, estSuppl: true },
-      { nom: "Escalope", prix: 0, estSuppl: false },
-      { nom: "Steak", prix: 0, estSuppl: false },
-      { nom: "Cordon Bleu", prix: 0, estSuppl: false },
-      { nom: "Viande Hachée", prix: 0, estSuppl: false },
-      { nom: "Option Gratiné", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné (Mozza, Boursin, Chèvre ou Raclette)", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true },
       { nom: "Frites Cheddar Bacon", prix: 2.0, estSuppl: true },
-      { nom: "Supplément Boisson", prix: 2.0, estSuppl: true }
+      { nom: "Supplément Tenders", prix: 1.5, estSuppl: true }
     ]
   },
   {
     nom: "Tacos 3 Viandes",
-    description: "Viandes au choix, frites, sauce fromagère",
+    description: "3 Viandes au choix, frites, sauce fromagère",
     prix: 10.0,
-    image: "/images/Menu_formule/Fiche_tacos.png",
+    image: "/images/Tacos/Tacos_3v.png",
     categorie: "Tacos",
     ingredients: [
-      { nom: "Tenders", prix: 1.5, estSuppl: true },
-      { nom: "Escalope", prix: 0, estSuppl: false },
-      { nom: "Steak", prix: 0, estSuppl: false },
-      { nom: "Cordon Bleu", prix: 0, estSuppl: false },
-      { nom: "Viande Hachée", prix: 0, estSuppl: false },
-      { nom: "Option Gratiné", prix: 2.0, estSuppl: true },
+      { nom: "Option Gratiné (Mozza, Boursin, Chèvre ou Raclette)", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true },
       { nom: "Frites Cheddar Bacon", prix: 2.0, estSuppl: true },
-      { nom: "Supplément Boisson", prix: 2.0, estSuppl: true }
+      { nom: "Supplément Tenders", prix: 1.5, estSuppl: true }
     ]
   },
 
@@ -143,115 +135,124 @@ export const produitsInitialData = [
   // 🥖 SANDWICHS
   // =====================
   {
-    nom: "Américain",
-    description: "Steak haché, frites à l'intérieur, salade, tomate",
-    prix: 9.0, // estimé
-    image: "/images/Sandwich/S_Americain.png",
-    categorie: "Sandwichs",
-    ingredients: [
-      { nom: "Steak haché", prix: 0, estSuppl: false },
-      { nom: "Frites", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false },
-      { nom: "Tomate", prix: 0, estSuppl: false }
-    ]
-  },
-  {
-    nom: "Escalope",
-    description: "Émincé de poulet mariné, salade, tomate",
-    prix: 9.0, // estimé
-    image: "/images/Sandwich/S_escalop.png",
-    categorie: "Sandwichs",
-    ingredients: [
-      { nom: "Poulet mariné", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false },
-      { nom: "Tomate", prix: 0, estSuppl: false }
-    ]
-  },
-  {
-    nom: "Kebab",
-    description: "Viande kebab grillée, oignons, salade, tomate",
-    prix: 8.5, // estimé
-    image: "/images/Sandwich/S_Kebab.png",
-    categorie: "Sandwichs",
-    ingredients: [
-      { nom: "Viande Kebab", prix: 0, estSuppl: false },
-      { nom: "Oignons", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false },
-      { nom: "Tomate", prix: 0, estSuppl: false }
-    ]
-  },
-  {
-    nom: "Kefta",
-    description: "Viande hachée épicée, oignons, salade, tomate",
-    prix: 9.5, // estimé
+    nom: "Sandwich Kefta",
+    description: "Viande hachée épicée, salade, tomate, oignons",
+    prix: 7.9,
     image: "/images/Sandwich/S_Kefta.png",
     categorie: "Sandwichs",
     ingredients: [
-      { nom: "Viande Kefta", prix: 0, estSuppl: false },
-      { nom: "Oignons", prix: 0, estSuppl: false },
-      { nom: "Salade", prix: 0, estSuppl: false },
-      { nom: "Tomate", prix: 0, estSuppl: false }
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Sandwich Escalope",
+    description: "Émincé de poulet mariné, salade, tomate",
+    prix: 7.9,
+    image: "/images/Sandwich/S_escalop.png",
+    categorie: "Sandwichs",
+    ingredients: [
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Sandwich Kebab",
+    description: "Viande kebab grillée, salade, tomate, oignons",
+    prix: 7.9,
+    image: "/images/Sandwich/S_Kebab.png",
+    categorie: "Sandwichs",
+    ingredients: [
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Sandwich Américain",
+    description: "Steak ou Merguez, frites à l'intérieur, salade",
+    prix: 7.9,
+    image: "/images/Sandwich/S_Americain.png",
+    categorie: "Sandwichs",
+    ingredients: [
+      { nom: "Menu (Frites & Boisson)", prix: 2.0, estSuppl: true }
     ]
   },
 
   // =====================
-  // 🍟 POUTINES & BOWLS
+  // 🍟 POUTINES
   // =====================
   {
-    nom: "Boursin",
-    description: "Sauce fromagère au Boursin, oignons frits",
-    prix: 9.5, // estimé
-    image: "/images/Poutine/P_Boursin.png",
-    categorie: "Poutines",
-    ingredients: [
-      { nom: "Sauce fromagère Boursin", prix: 0, estSuppl: false },
-      { nom: "Oignons frits", prix: 0, estSuppl: false }
-    ]
-  },
-  {
-    nom: "Chèvre Miel",
-    description: "Fromage de chèvre fondu, miel",
-    prix: 9.5, // estimé
+    nom: "Poutine Chèvre Miel",
+    description: "Taille L de base. Frites, sauce, chèvre fondu, miel.",
+    prix: 9.0,
     image: "/images/Poutine/P_ChevreMiel.png",
     categorie: "Poutines",
     ingredients: [
-      { nom: "Chèvre fondu", prix: 0, estSuppl: false },
-      { nom: "Miel", prix: 0, estSuppl: false }
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
     ]
   },
   {
-    nom: "Kebab",
-    description: "Frites, viande kebab, sauce fromagère",
-    prix: 9.5, // estimé
-    image: "/images/Poutine/P_Kebab.png",
+    nom: "Poutine Indienne",
+    description: "Taille L de base. Frites, sauce fromagère curry/poulet.",
+    prix: 9.0,
+    image: "/images/Poutine/P_Indienne.png", // A remplacer
     categorie: "Poutines",
     ingredients: [
-      { nom: "Frites", prix: 0, estSuppl: false },
-      { nom: "Viande Kebab", prix: 0, estSuppl: false },
-      { nom: "Sauce fromagère", prix: 0, estSuppl: false }
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
     ]
   },
   {
-    nom: "Montagnard",
-    description: "Sauce fromagère onctueuse, oignons frits",
-    prix: 9.5, // estimé
+    nom: "Poutine Montagnard",
+    description: "Taille L de base. Sauce fromagère onctueuse, oignons frits",
+    prix: 9.0,
     image: "/images/Poutine/P_Montagnard.png",
     categorie: "Poutines",
     ingredients: [
-      { nom: "Sauce fromagère onctueuse", prix: 0, estSuppl: false },
-      { nom: "Oignons frits", prix: 0, estSuppl: false }
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
     ]
   },
   {
-    nom: "Savoyard",
-    description: "Lardons/Bacon, oignons frits, fromage fondu",
-    prix: 10.0, // estimé
+    nom: "Poutine Spicy",
+    description: "Taille L de base. Frites, sauce épicée.",
+    prix: 9.0,
+    image: "/images/Poutine/P_Spicy.png", // A remplacer
+    categorie: "Poutines",
+    ingredients: [
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Poutine Boursin",
+    description: "Taille L de base. Sauce fromagère au Boursin, oignons frits",
+    prix: 9.0,
+    image: "/images/Poutine/P_Boursin.png",
+    categorie: "Poutines",
+    ingredients: [
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Poutine Savoyard",
+    description: "Taille L de base. Lardons/Bacon, oignons frits, fromage fondu",
+    prix: 9.0,
     image: "/images/Poutine/p_Savoyard.png",
     categorie: "Poutines",
     ingredients: [
-      { nom: "Lardons/Bacon", prix: 0, estSuppl: false },
-      { nom: "Oignons frits", prix: 0, estSuppl: false },
-      { nom: "Fromage fondu", prix: 0, estSuppl: false }
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Poutine Kebab",
+    description: "Taille L de base. Frites, viande kebab, sauce fromagère",
+    prix: 9.0,
+    image: "/images/Poutine/P_Kebab.png",
+    categorie: "Poutines",
+    ingredients: [
+      { nom: "Taille XL", prix: 2.0, estSuppl: true },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
     ]
   }
 ];
