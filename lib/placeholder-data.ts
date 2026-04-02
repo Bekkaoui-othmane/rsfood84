@@ -75,24 +75,28 @@ export const produitsInitialData = [
     nom: "Menu RS1",
     description: "Cheese + Double Cheese + Frites + Boisson",
     prix: 11.0,
-    image: "/images/Burger/Menu_RS1.png", // Image à changer si besoin
+    image: "/images/Menu_formule/Menu_rs1.png",
     categorie: "Formules",
-    ingredients: []
+    ingredients: [
+      { nom: "Gratinage (au four)", prix: 2.0, estSuppl: true }
+    ]
   },
   {
     nom: "Menu RS2",
     description: "Cheese + Chicken + Frites + Boisson",
     prix: 11.0,
-    image: "/images/Burger/Menu_RS2.png", // Image à changer si besoin
+    image: "/images/Menu_formule/Menu_rs2.png",
     categorie: "Formules",
-    ingredients: []
+    ingredients: [
+      { nom: "Gratinage (au four)", prix: 2.0, estSuppl: true }
+    ]
   },
 
-  // =====================
-  // 🌯 TACOS
-  // =====================
-  {
-    nom: "Tacos 1 Viande",
+    // =====================
+    // 🌯 TACOS
+    // =====================
+    {
+      nom: "Tacos 1 Viande",
     description: "1 Viande au choix, frites, sauce fromagère",
     prix: 8.0,
     image: "/images/Tacos/Tacos_1v.jpg",

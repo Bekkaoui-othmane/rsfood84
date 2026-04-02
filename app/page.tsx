@@ -3,14 +3,28 @@ import Image from "next/image";
 import { MapPin, Phone } from "lucide-react";
 import { FaInstagram, FaSnapchatGhost, FaTiktok } from "react-icons/fa";
 import GoogleMap from "@/components/GoogleMap";
-import MenuCarousel from "@/components/MenuCarousel";
+import MenuCarousel from "@/public/images/Menu_formule/MenuCarousel";
 import FormulesCarousel from "@/components/FormulesCarousel";
 
 export default function Home() {
   return (
-    <div className="w-full flex flex-col">
-      {/* 0. Bannière Logo (Fond Noir) */}
-      <section className="w-full bg-black flex flex-col md:flex-row items-center justify-center py-6 md:py-10 border-b border-[#1F1F1F] shadow-[0_4px_20px_rgba(0,0,0,0.5)] z-20 relative px-4 gap-6 md:gap-12">
+    <div className="w-full flex flex-col relative overflow-hidden">
+      
+      {/* --- Image de Fond de la page avec un flou en haut et en bas --- */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20">
+        <Image
+          src="/images/logo_image_pro/Image2Fond3.png"
+          alt="Fond décoratif RsFood"
+          fill
+          className="object-cover object-center scale-100 opacity-25 translate-y-6"
+          priority
+        />
+        {/* Masques de flou dégradé noir (Haut et Bas) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-[#0a0a0a]"></div>
+      </div>
+
+      {/* 0. Bannière Logo (Fond Transparent par-dessus) */}
+      <section className="w-full flex flex-col md:flex-row items-center justify-center py-6 md:py-10 border-b border-[#1F1F1F]/50 shadow-[0_4px_20px_rgba(0,0,0,0.5)] z-20 relative px-4 gap-6 md:gap-12 bg-black/60 backdrop-blur-sm">
         
         {/* Réseaux sociaux (Boutons flottants à gauche sur Desktop, empilés en haut sur Mobile) */}
         <div className="w-full md:w-auto md:absolute md:left-8 top-1/2 md:-translate-y-1/2 flex flex-row md:flex-col justify-center gap-6 z-30">

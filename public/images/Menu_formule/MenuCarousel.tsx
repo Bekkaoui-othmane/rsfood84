@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { produitsInitialData } from '@/lib/placeholder-data';
-import ProduitCard from './ProduitCard';
+import ProduitCard from '../../../components/ProduitCard';
 
 export default function MenuCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -20,22 +20,22 @@ export default function MenuCarousel() {
     if (scrollRef.current) {
       const { current } = scrollRef;
       const scrollAmount = direction === 'left' ? -350 : 350;
-      
-      // Nouvelle position théorique
-      const newPos = current.scrollLeft + scrollAmount;
       const maxScroll = current.scrollWidth - current.clientWidth;
 
-      // Boucle à droite (si on dépasse la fin)
-      if (direction === 'right' && newPos >= maxScroll - 5) {
-        current.scrollTo({ left: 0, behavior: 'smooth' }); // Retour au début
-      } 
-      // Boucle à gauche (si on dépasse le début)
-      else if (direction === 'left' && newPos <= 5) {
-        current.scrollTo({ left: maxScroll, behavior: 'smooth' }); // Va tout à la fin
-      } 
-      // Sinon défilement normal
-      else {
-        current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      if (direction === 'right') {
+        // Si on est déjà tout à la fin, on retourne au début
+        if (current.scrollLeft >= maxScroll - 5) {
+          current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      } else if (direction === 'left') {
+        // Si on est déjà tout au début, on va tout à la fin
+        if (current.scrollLeft <= 5) {
+          current.scrollTo({ left: maxScroll, behavior: 'smooth' });
+        } else {
+          current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
       }
     }
   };

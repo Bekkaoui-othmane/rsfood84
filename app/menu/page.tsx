@@ -1,26 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { produitsInitialData } from "@/lib/placeholder-data";
 import ProduitCard, { ProduitPlaceholder } from "@/components/ProduitCard";
-
-// Cette page est maintenant un Client Component pour permettre le filtrage interactif.
-// Pour l'instant, nous générons des IDs factices basés sur l'index de la liste statique.
-// Plus tard, ces données viendront de Prisma.
+import TunnelCommande from "@/components/TunnelCommande";
+import { PRODUITS } from '@/lib/mockData';
 export default function MenuPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
-
-  const produits = produitsInitialData.map((p, index) => ({
-    id: index + 1,
-    ...p
-  })) as ProduitPlaceholder[];
+  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");     
+  const [produitSelectionne, setProduitSelectionne] = useState<ProduitPlaceholder | null>(null);
 
   // Regrouper par catégories en conservant un ordre logique
-  const baseCategories = ["Burgers", "Sandwichs", "Tacos", "Poutines"];
+  const baseCategories = ["Burgers", "Sandwichs", "Formules", "Tacos", "Poutines"];
   const allCategories = ["Tous", ...baseCategories];
   
   const produitsParCategorie = baseCategories.reduce((acc, cat) => {
-    acc[cat] = produits.filter(p => p.categorie === cat);
+    acc[cat] = PRODUITS.filter(p => p.categorie === cat);
     return acc;
   }, {} as Record<string, ProduitPlaceholder[]>);
 
@@ -82,13 +75,31 @@ export default function MenuPage() {
                 {/* Grille */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {produitsParCategorie[cat].map(produit => (
-                    <ProduitCard key={produit.id} produit={produit} />
+                    <ProduitCard 
+                      key={produit.id} 
+                      produit={produit} 
+                      onBuyClick={() => setProduitSelectionne(produit)}
+                    />
                   ))}
                 </div>
               </section>
             );
           })}
         </div>
+
+        {produitSelectionne && (
+          <TunnelCommande
+            produit={{
+              id: String(produitSelectionne.id),
+              nom: produitSelectionne.nom,
+              prixBase: produitSelectionne.prix,
+              description: produitSelectionne.description,
+              categorie: (produitSelectionne.categorie.toLowerCase() === 'tacos' ? 'tacos' : produitSelectionne.categorie.toLowerCase().replace(/s$/, '').replace('sandwich', 'burger')) as 'burger' | 'tacos' | 'poutine' | 'formule',
+              ingredientsDemontables: produitSelectionne.ingredientsDemontables ?? [],
+            }}
+            onFermer={() => setProduitSelectionne(null)}
+          />
+        )}
       </div>
     </div>
   );
