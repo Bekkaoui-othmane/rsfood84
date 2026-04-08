@@ -1,19 +1,25 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+// Import du type ConfigCommande pour l'article (Règle 6)
+import { ConfigCommande } from '@/lib/types';
 
 export type Personnalisation = {
   nom: string;
-  prix: number;
+  // Suppression du prix dans Personnalisation (Règle 1)
   type: 'ajout' | 'retrait';
 };
 
 export type ArticlePanier = {
   id: number;
+  // Ajout de produitId pour identifier le produit côté serveur (Règle 5)
+  produitId: string;
   nom: string;
-  prix: number;
+  // Suppression du prix dans ArticlePanier (Règle 2)
   image: string;
   quantite: number;
   personnalisations: Personnalisation[];
+  // Ajout de config dans ArticlePanier (Règle 6)
+  config: ConfigCommande;
 };
 
 interface PanierState {
@@ -25,7 +31,7 @@ interface PanierState {
   viderPanier: () => void;
   ouvrirPanier: () => void;
   fermerPanier: () => void;
-  calculerTotal: () => number;
+  // Suppression de calculerTotal() dans l'interface (Règle 3)
   nombreArticles: () => number;
 }
 
@@ -40,8 +46,8 @@ const sontPersonnalisationsIdentiques = (p1: Personnalisation[], p2: Personnalis
   
   return sorted1.every((p, index) => 
     p.nom === sorted2[index].nom && 
-    p.type === sorted2[index].type &&
-    p.prix === sorted2[index].prix
+    p.type === sorted2[index].type
+    // Suppression de la comparaison du prix (Règle 4)
   );
 };
 
@@ -91,11 +97,7 @@ export const usePanierStore = create<PanierState>()(
 
       fermerPanier: () => set({ panierOuvert: false }),
 
-      calculerTotal: () => {
-        const { articles } = get();
-        const total = articles.reduce((somme, article) => somme + (article.prix * article.quantite), 0);
-        return parseFloat(total.toFixed(2));
-      },
+      // Suppression de l'implémentation de calculerTotal (Règle 3)
 
       nombreArticles: () => {
         const { articles } = get();

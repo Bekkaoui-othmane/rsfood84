@@ -12,6 +12,7 @@ import {
   OPTIONS_GRATINAGE,
   VIANDES_TACOS 
 } from '@/lib/mockData';
+import { ConfigCommande, ChoixGratinage } from '@/lib/types';
 
 // --- SCHÉMAS ZOD POUR SÉCURISER LES ENTRÉES ---
 // Validation du produit entrant pour éviter toute injection ou corruption des données
@@ -30,23 +31,6 @@ type ProduitValide = z.infer<typeof produitSchema>;
 type Props = {
   produit: ProduitValide;
   onFermer: () => void;
-};
-
-// --- TYPES ---
-export type ChoixGratinage = typeof OPTIONS_GRATINAGE[number];
-
-export type ConfigCommande = {
-  avecFritesBoisson: boolean;
-  gratinage: ChoixGratinage | null;
-  fritesFromage: boolean;
-  sauce: string | null;
-  boisson1: string | null;
-  boisson2: string | null;
-  ingredientsRetires: string[];
-  nbViandes: number | null;
-  viandes: string[];
-  taillePoutine: 'L' | 'XL' | null;
-  burgersFormule: { nomBurger: string, ingredientsRetires: string[], gratinage: string | null }[];
 };
 
 export default function TunnelCommande({ produit, onFermer }: Props) {
