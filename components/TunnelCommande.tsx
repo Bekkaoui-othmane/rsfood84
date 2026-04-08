@@ -21,6 +21,7 @@ const produitSchema = z.object({
   nom: z.string().min(1, "Le nom est requis"),
   prixBase: z.number().min(0, "Le prix ne peut pas être négatif"),
   categorie: z.enum(['burger', 'tacos', 'poutine', 'formule']),
+  image: z.string().optional(),
   ingredientsDemontables: z.array(z.string()).optional(),
   description: z.string().optional(),
 });
@@ -145,6 +146,9 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
   const nomEtapeCourante = etapes[etapeCourante];
 
   // --- CALCUL DU PRIX TOTAL ---
+  // Calcul indicatif côté client pour l'UX uniquement
+  // Le prix réel est recalculé et vérifié par /api/checkout
+  // Ce montant n'est jamais envoyé au serveur
   const prixTotal = useMemo(() => {
     if (!safeProduit) return 0;
     let total = safeProduit.prixBase;
@@ -222,45 +226,41 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
   };
 
   const validerPanier = () => {
+    if (!safeProduit) return;
+
+    const quantite = 1;
+    const personnalisations: { nom: string, type: 'ajout' | 'retrait' }[] = [
+      ...config.ingredientsRetires.map(ing => ({
+        nom: ing, type: 'retrait' as const
+      })),
+      ...config.viandes.map((v: string) => ({
+        nom: v, type: 'ajout' as const
+      })),
+      ...(config.gratinage ? [{
+        nom: 'Gratiné ' + config.gratinage, type: 'ajout' as const   
+      }] : []),
+      ...(config.fritesFromage ? [{
+        nom: 'Frites Cheddar Bacon', type: 'ajout' as const
+      }] : []),
+      ...(config.sauce ? [{
+        nom: 'Sauce ' + config.sauce, type: 'ajout' as const
+      }] : []),
+      ...(config.boisson1 ? [{
+        nom: config.boisson1, type: 'ajout' as const
+      }] : []),
+      ...(config.boisson2 ? [{
+        nom: config.boisson2, type: 'ajout' as const
+      }] : []),
+    ];
+
     ajouterArticle({
-      id: Date.now().toString(),
-      produitId: safeProduit.id,
+      id: Date.now(),
+      produitId: safeProduit.id.toString(),
       nom: safeProduit.nom,
-      prix: prixTotal,
-      quantite: 1,
-      config: config,
-      personnalisations: [
-        ...config.ingredientsRetires.map(ing => ({ 
-          nom: ing, prix: 0, type: 'retrait' as const 
-        })),
-        ...config.viandes
-          .filter((v: string) => (VIANDES_TACOS.find(vt => vt.nom === v)?.prix || 0) > 0)
-          .map((v: string) => ({ 
-            nom: v, 
-            prix: VIANDES_TACOS.find(vt => vt.nom === v)?.prix || 0, 
-            type: 'ajout' as const 
-          })),
-        ...(config.gratinage ? [{ 
-          nom: 'Gratiné ' + config.gratinage, prix: 2, type: 'ajout' as const 
-        }] : []),
-        ...(config.fritesFromage ? [{ 
-          nom: 'Frites Cheddar Bacon', prix: 2, type: 'ajout' as const 
-        }] : []),
-        ...(config.sauce ? [{ 
-          nom: 'Sauce ' + config.sauce, prix: 0, type: 'ajout' as const 
-        }] : []),
-        ...(config.boisson1 ? [{ 
-          nom: config.boisson1, 
-          prix: ((safeProduit.categorie === 'burger' && config.avecFritesBoisson) || safeProduit.categorie === 'formule') ? 0 : (BOISSONS.find(b => b.nom === config.boisson1)?.prix || 0), 
-          type: 'ajout' as const 
-        }] : []),
-        ...(config.boisson2 ? [{ 
-          nom: config.boisson2, 
-          prix: BOISSONS.find(b => b.nom === config.boisson2)?.prix || 0, 
-          type: 'ajout' as const 
-        }] : []),
-      ]
-    });
+      image: safeProduit.image ?? '',
+      quantite: quantite,
+      personnalisations: personnalisations,
+      config: config
     onFermer();
     ouvrirPanier();
     router.push('/menu');
@@ -827,6 +827,7 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
               <div className="pt-4 border-t border-[var(--border-color)] flex justify-between items-baseline mt-2">
                 <span className="text-[var(--text-secondary)] font-medium">Total</span>
                 <span className="text-2xl font-bold text-[var(--orange)] font-[family-name:var(--font-outfit)]">
+                  {/* Prix indicatif uniquement - le prix réel est recalculé côté serveur dans /api/checkout */}
                   {prixTotal.toFixed(2)}€
                 </span>
               </div>
@@ -1071,7 +1072,10 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
          <div className="mt-8 pt-8 border-t border-[var(--border-color)] flex-shrink-0 relative z-20">
            <div className="flex justify-between items-baseline mb-6">
              <span className="text-[var(--text-secondary)] font-medium text-lg">Total</span>
-             <span className="text-3xl font-bold font-[family-name:var(--font-outfit)] text-[var(--orange)]">{prixTotal.toFixed(2)}€</span>
+             <span className="text-3xl font-bold font-[family-name:var(--font-outfit)] text-[var(--orange)]">
+               {/* Prix indicatif uniquement - le prix réel est recalculé côté serveur dans /api/checkout */}
+               {prixTotal.toFixed(2)}€
+             </span>
            </div>
            
            <button 
@@ -1154,7 +1158,10 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
             <div className="border-t border-[var(--border-color)] pt-6">
               <div className="flex justify-between items-baseline mb-6">
                 <span className="text-[var(--text-secondary)] font-medium">Total</span>
-                <span className="text-3xl font-bold font-[family-name:var(--font-outfit)] text-[var(--orange)]">{prixTotal.toFixed(2)}€</span>
+                <span className="text-3xl font-bold font-[family-name:var(--font-outfit)] text-[var(--orange)]">
+                  {/* Prix indicatif uniquement - le prix réel est recalculé côté serveur dans /api/checkout */}
+                  {prixTotal.toFixed(2)}€
+                </span>
               </div>
               <button 
                 onClick={validerPanier}
