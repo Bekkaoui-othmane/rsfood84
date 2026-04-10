@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod'; // Ajout de Zod pour la validation stricte
 import { usePanierStore } from '@/store/panierStore';
@@ -212,6 +212,19 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
     }
   };
 
+  useEffect(() => {
+    console.log('DEBUG étape:', nomEtapeCourante);
+    console.log('DEBUG ingrédients:', safeProduit?.ingredientsDemontables);
+    // Passer automatiquement l'étape si aucun ingrédient
+    // n'est disponible pour ce produit en base de données
+    if (
+      nomEtapeCourante === 'Retirer Ingrédients' && 
+      (safeProduit?.ingredientsDemontables ?? []).length === 0
+    ) {
+      gererSuivant();
+    }
+  }, [nomEtapeCourante, safeProduit]);
+
   const gererRetour = () => {
     if (etapeCourante > 0) {
       setEtapeCourante(prev => prev - 1);
@@ -304,12 +317,6 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
         // Les ingrédients viennent exclusivement de la BDD
         // via Prisma. Aucun fallback local autorisé.
         const ingredientsAfficher = safeProduit.ingredientsDemontables ?? [];
-
-        if (ingredientsAfficher.length === 0) {
-          // Passer automatiquement si pas d'ingrédients
-          gererSuivant();
-          return null;
-        }
 
         return (
           <div className="flex flex-wrap gap-3">

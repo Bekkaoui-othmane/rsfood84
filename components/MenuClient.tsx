@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { Produit, Ingredient } from '@prisma/client';
 import ProduitCard from '@/components/ProduitCard';
 import TunnelCommande from '@/components/TunnelCommande';
+import { mapperCategorie } from '@/lib/utils';
 
 // Typage étendu pour inclure la relation jointe via Prisma (include: { ingredients: true })
 type ProduitAvecIngredients = Produit & {
@@ -19,27 +20,7 @@ export default function MenuClient({ produits, categories }: MenuClientProps) {
   // --- ÉTATS LOCAUX ---
   const [selectedCategory, setSelectedCategory] = useState<string>('Tous');     
   const [produitSelectionne, setProduitSelectionne] = useState<ProduitAvecIngredients | null>(null);
-  // Fonction de mappage sécurisée pour les catégories
-  const mapperCategorie = (cat: string): 
-    'burger' | 'tacos' | 'poutine' | 'formule' | 'riz-crousty' => {
-    const mapping: Record<string, 
-      'burger' | 'tacos' | 'poutine' | 'formule' | 'riz-crousty'> = {
-      'burgers': 'burger',
-      'burger': 'burger',
-      'tacos': 'tacos',
-      'poutines': 'poutine',
-      'poutine': 'poutine',
-      'formules': 'formule',
-      'formule': 'formule',
-      'sandwichs': 'burger',
-      'riz crousty': 'riz-crousty',
-    };
-    return mapping[cat.toLowerCase()] ?? 'burger';
-  };
 
-  // Ajout de "Tous" en première position des filtres
-  const allCategories = ['Tous', ...categories];
-  
   // --- REGROUPEMENT DES DONNÉES ---
   // Regroupement dynamique des produits par catégorie
   const produitsParCategorie = categories.reduce((acc, cat) => {
