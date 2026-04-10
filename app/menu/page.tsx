@@ -7,7 +7,10 @@ export default async function MenuPage() {
     where: { 
       disponible: true 
     },
-    orderBy: { 
+    include: {
+      ingredients: true // Récupération des ingrédients rattachés au produit
+    },
+    orderBy: {
       categorie: 'asc' // Regroupement alphabétique
     }
   });

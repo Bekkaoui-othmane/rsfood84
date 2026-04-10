@@ -23,6 +23,14 @@ async function main() {
         image: produit.image ?? '',
         categorie: produit.categorie,
         disponible: true,
+        // Création en cascade des ingrédients associés au produit
+        ingredients: {
+          create: produit.ingredientsDemontables?.map((nom: string) => ({
+            nom: nom,
+            prix: 0,
+            estSuppl: false
+          })) ?? []
+        }
       },
     });
   }

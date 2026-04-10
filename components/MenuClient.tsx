@@ -1,20 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import type { Produit } from '@prisma/client';
+import type { Produit, Ingredient } from '@prisma/client';
 import ProduitCard from '@/components/ProduitCard';
 import TunnelCommande from '@/components/TunnelCommande';
 
+// Typage étendu pour inclure la relation jointe via Prisma (include: { ingredients: true })
+type ProduitAvecIngredients = Produit & {
+  ingredients: Ingredient[];
+};
+
 interface MenuClientProps {
-  produits: Produit[];
+  produits: ProduitAvecIngredients[];
   categories: string[];
 }
 
-export default function MenuClient({ produits, categories }: MenuClientProps) {
+export default function MenuClient({ produits, categories }: MenuClientProps) { 
   // --- ÉTATS LOCAUX ---
   const [selectedCategory, setSelectedCategory] = useState<string>('Tous');     
-  const [produitSelectionne, setProduitSelectionne] = useState<Produit | null>(null);
-
+  const [produitSelectionne, setProduitSelectionne] = useState<ProduitAvecIngredients | null>(null);
   // Fonction de mappage sécurisée pour les catégories
   const mapperCategorie = (cat: string): 
     'burger' | 'tacos' | 'poutine' | 'formule' | 'riz-crousty' => {
@@ -41,7 +45,7 @@ export default function MenuClient({ produits, categories }: MenuClientProps) {
   const produitsParCategorie = categories.reduce((acc, cat) => {
     acc[cat] = produits.filter(p => p.categorie === cat);
     return acc;
-  }, {} as Record<string, Produit[]>);
+  }, {} as Record<string, ProduitAvecIngredients[]>);
 
   // Catégories à afficher selon le filtre sélectionné par l'utilisateur
   const categoriesToDisplay = selectedCategory === 'Tous' 
@@ -99,8 +103,14 @@ export default function MenuClient({ produits, categories }: MenuClientProps) {
                       prix: produit.prix,
                       image: produit.image || '',
                       categorie: produit.categorie,
-                      // TODO: brancher les ingrédients depuis Prisma quand la relation sera utilisée côté menu
-                      ingredients: [],
+                      // Transmission des ingrédients démontables formattés vers la carte
+                      ingredients: produit.ingredients
+                        .filter((i: Ingredient) => !i.estSuppl)
+                        .map((i: Ingredient) => ({
+                           nom: i.nom,
+                           prix: i.prix,
+                           estSuppl: i.estSuppl
+                        })),
                     }} 
                     onBuyClick={() => setProduitSelectionne(produit)}
                   />
@@ -121,8 +131,10 @@ export default function MenuClient({ produits, categories }: MenuClientProps) {
             prixBase: produitSelectionne.prix, // Prisma utilise 'prix', TunnelCommande attend 'prixBase'
             description: produitSelectionne.description || '',
             categorie: mapperCategorie(produitSelectionne.categorie),
-            // TODO: brancher les ingrédients démontables depuis Prisma quand la relation sera utilisée
-            ingredientsDemontables: [],
+            // Extraction en base de données dynamique des ingrédients démontables
+            ingredientsDemontables: produitSelectionne.ingredients
+              .filter((i: Ingredient) => !i.estSuppl)
+              .map((i: Ingredient) => i.nom)
           }}
           onFermer={() => setProduitSelectionne(null)}
         />

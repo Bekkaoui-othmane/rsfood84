@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react'; // Ajout de useSession pour la vérification
 import { z } from 'zod'; // Ajout de Zod pour la validation stricte
 import { usePanierStore } from '@/store/panierStore';
 import { ShoppingBag, X, CheckCircle2, ChevronRight, ChevronLeft, Package, Plus, Minus } from 'lucide-react';
@@ -35,10 +34,6 @@ type Props = {
 };
 
 export default function TunnelCommande({ produit, onFermer }: Props) {
-  // --- VÉRIFICATION DE SESSION NEXTAUTH ---
-  // Ajout de la protection de route/composant
-  const { status } = useSession();
-  
   // Validation Zod de la prop 'produit' via un parse strict
   // Va lever une erreur si la donnée a été compromise volontairement (injection des query params ou state)
   const safeProduit = useMemo(() => {
@@ -306,18 +301,9 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
         );
 
       case 'Retirer Ingrédients':
-        const fallbackIngredients: Record<string, string[]> = {
-          burger: ['Salade', 'Tomate', 'Oignon', 'Cornichon', 'Cheddar', 'Sauce'],
-          tacos: ['Salade', 'Tomate', 'Oignon', 'Sauce blanche', 'Frites'],
-          sandwich: ['Salade', 'Tomate', 'Oignon'],
-          poutine: [],
-          formule: [],
-        };
-
-        const ingredientsAfficher =
-          (safeProduit.ingredientsDemontables && safeProduit.ingredientsDemontables.length > 0)
-            ? safeProduit.ingredientsDemontables
-            : (fallbackIngredients[safeProduit.categorie] ?? []);
+        // Les ingrédients viennent exclusivement de la BDD
+        // via Prisma. Aucun fallback local autorisé.
+        const ingredientsAfficher = safeProduit.ingredientsDemontables ?? [];
 
         if (ingredientsAfficher.length === 0) {
           // Passer automatiquement si pas d'ingrédients
@@ -854,20 +840,6 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
      if (nomEtapeCourante === 'Choisir les viandes') return `Sélectionnez exactement ${config.nbViandes || ''} viande(s).`;
      return "Personnalisez votre sélection selon vos envies.";
   };
-
-  // Si pas de session, retourne explicitement une erreur 401
-  if (status === 'unauthenticated') {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 font-[family-name:var(--font-inter)]">
-        <div className="bg-red-500/10 border border-red-500 text-red-500 p-8 rounded-2xl w-full max-w-md text-center">
-          <X className="w-12 h-12 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">401 Unauthorized</h2>
-          <p className="text-sm">Vous n&apos;êtes pas autorisé à accéder à cette fonctionnalité. Veuillez vous connecter.</p>
-          <button onClick={onFermer} className="mt-6 px-6 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors">Fermer</button>
-        </div>
-      </div>
-    );
-  }
 
   // Protection finale : on ne rend rien si le validateur a échoué.
   if (!safeProduit) return null;
