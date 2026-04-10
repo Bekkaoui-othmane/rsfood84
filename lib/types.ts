@@ -3,6 +3,8 @@ import { OPTIONS_GRATINAGE } from '@/lib/mockData';
 export type ChoixGratinage = typeof OPTIONS_GRATINAGE[number];
 
 export type ConfigCommande = {
+  // Optionnel : s'il est nécessaire de stocker la catégorie dans la config
+  categorie?: 'burger' | 'tacos' | 'poutine' | 'formule' | 'riz-crousty';
   avecFritesBoisson: boolean;
   gratinage: ChoixGratinage | null;
   fritesFromage: boolean;

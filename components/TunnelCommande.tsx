@@ -20,7 +20,7 @@ const produitSchema = z.object({
   id: z.string().min(1, "L'ID est requis"),
   nom: z.string().min(1, "Le nom est requis"),
   prixBase: z.number().min(0, "Le prix ne peut pas être négatif"),
-  categorie: z.enum(['burger', 'tacos', 'poutine', 'formule']),
+  categorie: z.enum(['burger', 'tacos', 'poutine', 'formule', 'riz-crousty']),
   image: z.string().optional(),
   ingredientsDemontables: z.array(z.string()).optional(),
   description: z.string().optional(),
@@ -261,6 +261,7 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
       quantite: quantite,
       personnalisations: personnalisations,
       config: config
+    });
     onFermer();
     ouvrirPanier();
     router.push('/menu');

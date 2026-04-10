@@ -1,32 +1,25 @@
-'use client';
+import { prisma } from '@/lib/prisma';
+import MenuClient from '@/components/MenuClient';
 
-import { useState } from 'react';
-import ProduitCard, { ProduitPlaceholder } from "@/components/ProduitCard";
-import TunnelCommande from "@/components/TunnelCommande";
-import { PRODUITS } from '@/lib/mockData';
-export default function MenuPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");     
-  const [produitSelectionne, setProduitSelectionne] = useState<ProduitPlaceholder | null>(null);
+export default async function MenuPage() {
+  // Récupération des produits disponibles depuis la base de données de manière asynchrone
+  const produits = await prisma.produit.findMany({
+    where: { 
+      disponible: true 
+    },
+    orderBy: { 
+      categorie: 'asc' // Regroupement alphabétique
+    }
+  });
 
-  // Regrouper par catégories en conservant un ordre logique
-  const baseCategories = ["Burgers", "Sandwichs", "Formules", "Tacos", "Poutines"];
-  const allCategories = ["Tous", ...baseCategories];
-  
-  const produitsParCategorie = baseCategories.reduce((acc, cat) => {
-    acc[cat] = PRODUITS.filter(p => p.categorie === cat);
-    return acc;
-  }, {} as Record<string, ProduitPlaceholder[]>);
-
-  // Déterminer quelles catégories afficher selon le filtre
-  const categoriesToDisplay = selectedCategory === "Tous" 
-    ? baseCategories 
-    : [selectedCategory];
+  // Génération dynamique de la liste des catégories uniques à partir des produits récupérés
+  const categories = [...new Set(produits.map(p => p.categorie))];
 
   return (
     <div className="w-full min-h-screen bg-[var(--bg-primary)] pt-24 pb-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         
-        {/* En-tête de la page */}
+        {/* En-tête de la page statique (Server Side Rendered) */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 font-[family-name:var(--font-outfit)]">
             Notre <span className="text-[var(--orange)]">Menu</span>
@@ -36,70 +29,9 @@ export default function MenuPage() {
           </p>
         </div>
 
-        {/* Navigation rapide entre catégories (Filtres) */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
-          {allCategories.map((cat) => (
-            <button 
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-6 py-2 rounded-full border transition-all font-medium ${
-                selectedCategory === cat
-                  ? 'border-[var(--orange)] bg-[var(--orange)] text-white shadow-[0_0_15px_rgba(232,93,4,0.3)]'
-                  : 'border-[#333] bg-[#0A0A0A] text-gray-400 hover:border-[var(--orange)] hover:text-white'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Grilles de produits par catégorie */}
-        <div className="space-y-16">
-          {categoriesToDisplay.map((cat) => {
-            // Ne pas afficher la section si elle est vide
-            if (!produitsParCategorie[cat] || produitsParCategorie[cat].length === 0) return null;
-
-            return (
-              <section 
-                key={cat} 
-                className="bg-[#111] border border-[#222] rounded-2xl p-6 md:p-8 shadow-lg"
-              >
-                {/* Titre de catégorie */}
-                <div className="flex items-center gap-4 mb-8">
-                  <h2 className="text-3xl font-bold text-white font-[family-name:var(--font-outfit)]">
-                    {cat}
-                  </h2>
-                  <div className="flex-1 h-px bg-gradient-to-r from-[var(--orange)] to-transparent opacity-50"></div>
-                </div>
-                
-                {/* Grille */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                  {produitsParCategorie[cat].map(produit => (
-                    <ProduitCard 
-                      key={produit.id} 
-                      produit={produit} 
-                      onBuyClick={() => setProduitSelectionne(produit)}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-
-        {produitSelectionne && (
-          <TunnelCommande
-            produit={{
-              id: String(produitSelectionne.id),
-              nom: produitSelectionne.nom,
-              prixBase: produitSelectionne.prix,
-              description: produitSelectionne.description,
-              categorie: (produitSelectionne.categorie.toLowerCase() === 'tacos' ? 'tacos' : produitSelectionne.categorie.toLowerCase().replace(/s$/, '').replace('sandwich', 'burger')) as 'burger' | 'tacos' | 'poutine' | 'formule',
-              ingredientsDemontables: produitSelectionne.ingredientsDemontables ?? [],
-            }}
-            onFermer={() => setProduitSelectionne(null)}
-          />
-        )}
+        {/* Délégation de la logique interactive (filtrage, sélection, modal) au Client Component */}
+        <MenuClient produits={produits} categories={categories} />
+        
       </div>
     </div>
   );

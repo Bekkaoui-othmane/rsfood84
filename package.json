@@ -6,17 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "ts-node -e CommonJS prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^7.6.0",
+    "@prisma/client": "^5.22.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
     "bcryptjs": "^3.0.3",
     "lucide-react": "^1.7.0",
     "next": "14.2.35",
     "next-auth": "^4.24.13",
-    "prisma": "^7.6.0",
+    "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.6.0",
