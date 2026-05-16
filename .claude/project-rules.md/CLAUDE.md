@@ -65,7 +65,7 @@ rsfood84/
 │   └── providers.tsx               ✅ COMPLET
 │
 ├── components/
-│   ├── TunnelCommande.tsx          ✅ COMPLET — riz-crousty ajouté (étapes + case + isReadyToSubmit)
+│   ├── TunnelCommande.tsx          🔄 EN COURS — riz-crousty manquant
 │   ├── MenuClient.tsx              ✅ COMPLET
 │   ├── ProduitCard.tsx             ✅ COMPLET
 │   ├── Navbar.tsx                  ⚠️ horaires à harmoniser avec contact/page.tsx
@@ -86,7 +86,7 @@ rsfood84/
 │
 ├── prisma/
 │   ├── schema.prisma               ✅ COMPLET
-│   └── seed.ts                     🔄 EN COURS — relancer npx prisma db seed pour injecter riz crousty
+│   └── seed.ts                     🔄 EN COURS — riz crousty à ajouter
 │
 ├── public/
 │   └── images/
@@ -98,7 +98,7 @@ rsfood84/
 │           ├── R_crousty.png       ✅
 │           ├── R_Spicy.png         ✅
 │           ├── R_Bayconaise.png    ✅
-│           └── riz_truffe.png      ✅  ⚠️ nom réel du fichier (pas R_Truffe.png)
+│           └── R_Truffe.png        ✅
 │
 └── .github/
     └── copilot-instructions.md     ✅ référence architecture générale
@@ -267,7 +267,7 @@ comme `configInitiale` prop à TunnelCommande, et initialiser le `useState` avec
 Étape 1 — Produits menu complets
   ✅ Riz crousty dans placeholder-data.ts (4 produits)
   ✅ Riz crousty dans INGREDIENTS_DEMONTABLES (mockData.ts)
-  ✅ Riz crousty dans TunnelCommande.tsx (étapes + case + isReadyToSubmit)
+  🔄 Riz crousty dans TunnelCommande.tsx (étapes + case)
   🔄 Relancer npx prisma db seed
 
 Étape 2 — Nettoyage artefacts
@@ -297,7 +297,49 @@ comme `configInitiale` prop à TunnelCommande, et initialiser le `useState` avec
 
 ---
 
-## 13. Ce que tu NE DOIS PAS faire
+## 13. Modèle de sécurité — RÉFÉRENCE OFFICIELLE
+
+Le client est considéré comme **potentiellement malveillant**. Toutes les données qui transitent par le client peuvent être modifiées (localStorage, store Zustand, body de requête). La sécurité repose donc entièrement sur le serveur.
+
+### Ce que le client peut modifier (sans impact)
+- Le contenu de son `localStorage` (panier persisté Zustand)
+- La quantité, les options, les ingrédients retirés dans le store
+- Le body envoyé à `/api/checkout` (avec n'importe quel JSON)
+- Le message WhatsApp pré-rempli avant envoi (wa.me ouvre le message en édition)
+
+### Ce que le client ne peut PAS modifier (verrouillé serveur)
+
+| Élément | Protection serveur |
+|---------|-------------------|
+| **Prix unitaire** | Recalculé depuis `prisma.produit.findUnique()`, jamais lu du client |
+| **Existence du produit** | `findUnique` retourne null → erreur 400 |
+| **Schéma de la requête** | Zod `.strict()` rejette tout champ non listé (notamment `prix`) |
+| **Total** | Calculé serveur, retourné au client, jamais accepté du client |
+| **Numéro WhatsApp destinataire** | En dur dans `lib/whatsapp.ts`, jamais paramétrable client |
+| **Produits en BDD** | Pas d'API publique de modification — réservé `/admin` avec auth NextAuth |
+
+### Règles de sécurité à respecter
+
+- ❌ **Jamais** de prix dans le store Zustand ou dans `ArticlePanier`
+- ❌ **Jamais** accepter un prix envoyé par le client dans une route API
+- ❌ **Jamais** utiliser une donnée du client sans la valider avec Zod
+- ❌ **Jamais** faire confiance à un ID produit sans vérification BDD
+- ✅ **Toujours** recalculer le prix côté serveur depuis Prisma
+- ✅ **Toujours** valider avec `.strict()` pour rejeter les champs inattendus
+- ✅ **Toujours** parser un `produitId` en `Int` avant `findUnique`
+
+### Cas du message WhatsApp
+
+Le message WhatsApp est généré côté serveur (`/api/checkout` retourne articles + total recalculé), puis encodé dans le lien `wa.me`. Le client peut éditer ce message avant envoi — mais c'est **sans conséquence** : 
+- Le message n'écrit pas en BDD
+- Le snack lit le message, vérifie cohérence, confirme par téléphone si besoin
+- Aucune commande automatique n'est créée à partir du message
+
+C'est un canal de communication, pas une transaction.
+
+---
+
+## 14. Ce que tu NE DOIS PAS faire
 
 - ❌ Ne jamais ajouter Stripe ou tout autre système de paiement
 - ❌ Ne jamais créer de compte client ou système d'authentification côté visiteur

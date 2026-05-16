@@ -31,9 +31,11 @@ type ProduitValide = z.infer<typeof produitSchema>;
 type Props = {
   produit: ProduitValide;
   onFermer: () => void;
+  configInitiale?: ConfigCommande;
+  articleIdEnEdition?: number;
 };
 
-export default function TunnelCommande({ produit, onFermer }: Props) {
+export default function TunnelCommande({ produit, onFermer, configInitiale, articleIdEnEdition }: Props) {
   // Validation Zod de la prop 'produit' via un parse strict
   // Va lever une erreur si la donnée a été compromise volontairement (injection des query params ou state)
   const safeProduit = useMemo(() => {
@@ -48,9 +50,15 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
   const router = useRouter();
   
   // Remplacement des @ts-ignore par des assertions de type sécurisées
-  const store = usePanierStore() as unknown as { ajouterArticle: (item: unknown) => void, ouvrirPanier: () => void };
+  const store = usePanierStore() as unknown as {
+    ajouterArticle: (item: unknown) => void;
+    ouvrirPanier: () => void;
+    supprimerArticle: (id: number) => void;
+    remplacerArticle: (ancienId: number, nouvelArticle: unknown) => void;
+  };
   const ajouterArticle = store.ajouterArticle || (() => {});
   const ouvrirPanier = store.ouvrirPanier || (() => {});
+  const remplacerArticle = store.remplacerArticle || (() => {});
 
   const [etapeCourante, setEtapeCourante] = useState(0);
 
@@ -72,21 +80,23 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
     }));
   };
 
-  const [config, setConfig] = useState<ConfigCommande>({
-    avecFritesBoisson: false,
-    gratinage: null,
-    fritesFromage: false,
-    sauce: null,
-    boisson1: null,
-    boisson2: null,
-    ingredientsRetires: safeProduit?.categorie === 'tacos'
-      ? ['Salade', 'Tomate', 'Oignon']
-      : [],
-    nbViandes: getNbViandes(),
-    viandes: [],
-    taillePoutine: null,
-    burgersFormule: getBurgersFormule()
-  });
+  const [config, setConfig] = useState<ConfigCommande>(
+    configInitiale ?? {
+      avecFritesBoisson: false,
+      gratinage: null,
+      fritesFromage: false,
+      sauce: null,
+      boisson1: null,
+      boisson2: null,
+      ingredientsRetires: safeProduit?.categorie === 'tacos'
+        ? ['Salade', 'Tomate', 'Oignon']
+        : [],
+      nbViandes: getNbViandes(),
+      viandes: [],
+      taillePoutine: null,
+      burgersFormule: getBurgersFormule(),
+    }
+  );
 
   // --- DÉFINITION DES ÉTAPES PAR CATÉGORIE ---
   const etapesBurger = [
@@ -184,7 +194,6 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
 
     // Boissons
     if (safeProduit.categorie === 'burger') {
-      if (config.avecFritesBoisson) total += 2;
       if (!config.avecFritesBoisson && config.boisson1) total += 2;
       if (config.boisson2) total += 2;
     } else {
@@ -269,15 +278,28 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
       }] : []),
     ];
 
-    ajouterArticle({
+    const nouvelArticle = {
       id: Date.now(),
       produitId: safeProduit.id.toString(),
       nom: safeProduit.nom,
       image: safeProduit.image ?? '',
       quantite: quantite,
       personnalisations: personnalisations,
-      config: config
-    });
+      config: config,
+    };
+
+    console.log('🔵 MODE ÉDITION ?', articleIdEnEdition !== undefined);
+    console.log('🔵 ID à remplacer:', articleIdEnEdition);
+    console.log('🔵 Articles AVANT:', usePanierStore.getState().articles.map(a => ({ id: a.id, nom: a.nom })));
+
+    if (articleIdEnEdition !== undefined) {
+      remplacerArticle(articleIdEnEdition, nouvelArticle);
+    } else {
+      ajouterArticle(nouvelArticle);
+    }
+
+    console.log('🔵 Articles APRÈS:', usePanierStore.getState().articles.map(a => ({ id: a.id, nom: a.nom })));
+
     onFermer();
     ouvrirPanier();
     router.push('/menu');

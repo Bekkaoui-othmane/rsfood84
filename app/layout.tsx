@@ -3,6 +3,8 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Panier from "@/components/Panier";
+import TunnelEdition from "@/components/TunnelEdition";
 import Providers from "@/app/providers";
 
 const inter = Inter({
@@ -32,6 +34,8 @@ export default function RootLayout({
       <body className="antialiased bg-[var(--bg-primary)] flex flex-col min-h-screen">
         <Providers>
           <Navbar />
+          <Panier />
+          <TunnelEdition />
           <main className="flex-grow">
             {children}
           </main>

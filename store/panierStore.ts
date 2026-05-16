@@ -25,12 +25,16 @@ export type ArticlePanier = {
 interface PanierState {
   articles: ArticlePanier[];
   panierOuvert: boolean;
+  articleEnEdition: ArticlePanier | null;
   ajouterArticle: (article: ArticlePanier) => void;
   retirerArticle: (id: number) => void;
   supprimerArticle: (id: number) => void;
+  remplacerArticle: (ancienId: number, nouvelArticle: ArticlePanier) => void;
   viderPanier: () => void;
   ouvrirPanier: () => void;
   fermerPanier: () => void;
+  ouvrirEdition: (article: ArticlePanier) => void;
+  fermerEdition: () => void;
   // Suppression de calculerTotal() dans l'interface (Règle 3)
   nombreArticles: () => number;
 }
@@ -56,6 +60,7 @@ export const usePanierStore = create<PanierState>()(
     (set, get) => ({
       articles: [],
       panierOuvert: false,
+      articleEnEdition: null,
 
       ajouterArticle: (nouvelArticle) => {
         set((state) => {
@@ -91,11 +96,24 @@ export const usePanierStore = create<PanierState>()(
         }));
       },
 
+      remplacerArticle: (ancienId, nouvelArticle) => {
+        set((state) => ({
+          articles: [
+            ...state.articles.filter((a) => a.id !== ancienId),
+            nouvelArticle,
+          ],
+        }));
+      },
+
       viderPanier: () => set({ articles: [] }),
 
       ouvrirPanier: () => set({ panierOuvert: true }),
 
       fermerPanier: () => set({ panierOuvert: false }),
+
+      ouvrirEdition: (article) => set({ articleEnEdition: article, panierOuvert: false }),
+
+      fermerEdition: () => set({ articleEnEdition: null }),
 
       // Suppression de l'implémentation de calculerTotal (Règle 3)
 
