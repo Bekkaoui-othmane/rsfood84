@@ -36,6 +36,9 @@ async function main() {
   }
 
   console.log('✅ Seed terminé avec succès ! Tous les produits ont été insérés.');
+
+  // Attendre que MySQL finalise l'écriture
+  await new Promise(resolve => setTimeout(resolve, 1000));
 }
 
 // Exécution du script complet

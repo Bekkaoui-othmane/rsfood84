@@ -47,6 +47,10 @@ const INGREDIENTS_DEMONTABLES: Record<string, string[]> = {
   'Tacos 1 Viande':    ['Salade', 'Tomate', 'Oignon', 'Sauce fromagère', 'Frites'],
   'Tacos 2 Viandes':   ['Salade', 'Tomate', 'Oignon', 'Sauce fromagère', 'Frites'],
   'Tacos 3 Viandes':   ['Salade', 'Tomate', 'Oignon', 'Sauce fromagère', 'Frites'],
+  'Riz Crousty Classique': ['Oignon frit', 'Sauce chili thaï'],
+  'Riz Crousty Spicy':     ['Oignon frit', 'Sauce chili thaï'],
+  'Riz Crousty Baconaise': ['Oignon frit', 'Sauce chili thaï'],
+  'Riz Crousty Truffe':    ['Oignon frit', 'Sauce chili thaï'],
 };
 
 export const PRODUITS = produitsInitialData.map((p, index) => ({

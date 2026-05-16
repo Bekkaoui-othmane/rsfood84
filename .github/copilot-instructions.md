@@ -33,7 +33,9 @@ rsfood84/
 │   ├── menu/
 │   │   └── page.tsx              ← grille produits
 │   ├── product/
-│   │   └── [id]/page.tsx         ← fiche détail produit
+│   │   └── [id]/
+│   │       ├── page.tsx          ← Server Component (Fetch Prisma + Zod)
+│   │       └── ProductClientUI.tsx ← Client Component (Interactivité)
 │   ├── panier/
 │   │   └── page.tsx              ← récapitulatif commande
 │   ├── about/
@@ -49,15 +51,18 @@ rsfood84/
 │   └── auth/[...nextauth]/       ← authentification admin
 ├── components/
 │   ├── ProduitCard.tsx           ← carte produit cliquable
+│   ├── TunnelCommande.tsx        ← tunnel public de personnalisation
 │   ├── Panier.tsx                ← composant panier
 │   ├── WhatsAppButton.tsx        ← génération lien wa.me
 │   ├── Carrousel.tsx             ← carrousel images
 │   └── GoogleMap.tsx             ← embed Google Maps
 ├── lib/
 │   ├── prisma.ts                 ← client Prisma singleton
+│   ├── utils.ts                  ← requêtes & fonctions partagées (DRY)
 │   └── whatsapp.ts               ← logique génération message
 ├── prisma/
-│   └── schema.prisma             ← schéma base de données
+│   ├── schema.prisma             ← schéma base de données
+│   └── seed.ts                   ← script de peuplement BDD initial
 └── public/
     └── videos/                   ← vidéo background accueil
 ```
@@ -148,6 +153,11 @@ Merci !
 
 ## Règles de code à respecter
 
+### 🚫 Data-Driven Uniquement (Zéro donnée en dur)
+- **Aucun texte / variable en dur** : Ne JAMAIS utiliser de variables statiques (`placeholder-data.ts`) ou de tableaux de secours (`fallback array`). 
+- **Source de vérité Prisma** : Toutes les données affichées (produits, ingrédients, prix, catégories) doivent provenir EXCLUSIVEMENT de la base de données.
+- **Principe DRY (Don't Repeat Yourself)** : Toujours mutualiser les logiques métier partagées (comme le mappage des catégories) dans des utilitaires communs (ex: `lib/utils.ts`).
+
 ### Général
 - Toujours utiliser **TypeScript** avec des types explicites
 - Pas de `any` — typer correctement tous les objets
@@ -155,12 +165,12 @@ Merci !
 - Noms de variables et fonctions en **camelCase** en français (ex: `ajouterAuPanier`, `prixTotal`)
 - Noms de composants en **PascalCase** (ex: `ProduitCard`, `BoutonWhatsApp`)
 
-### Next.js / React
-- Utiliser l'**App Router** de Next.js 14 (pas le Pages Router)
-- Préférer les **Server Components** par défaut
-- Utiliser `'use client'` uniquement quand nécessaire (interactions, state)
-- Les appels BDD se font **uniquement côté serveur** (Server Components ou API Routes)
-- Utiliser `loading.tsx` et `error.tsx` pour chaque route
+### Next.js / React (App Router)
+- **Architecture Stricte Serveur/Client** : 
+  - Les pages (`page.tsx`) sont des **Server Components** asynchrones voués EXCLUSIVEMENT aux requêtes Prisma.
+  - L'interface et l'interactivité (Next.js modals, clicks...) doivent être importées via des **Client Components** séparés (`ProductClientUI.tsx`, etc.). Jamais mixés dans le composant serveur asynchrone principal.
+- **Cycle de Vie React (Attention danger render-loop)** : Ne jamais déclencher de mutation d'état (state) pendant la phase de rendu du composant. Toujours isoler les effets de bord et la logique d'étapes (step logic) dans des hooks `useEffect`.
+- Utiliser `loading.tsx` et `error.tsx` pour chaque route pour un fall-back propre et asynchrone.
 
 ### Prisma
 - Toujours importer le client depuis `@/lib/prisma`
@@ -172,11 +182,11 @@ Merci !
 - Responsive : mobile-first (`sm:`, `md:`, `lg:`)
 - Le site doit être parfaitement utilisable sur mobile (commandes WhatsApp = mobile)
 
-### Sécurité
-- Toutes les routes `/api/admin/*` doivent vérifier la session NextAuth
-- Ne jamais exposer le mot de passe admin dans le client
-- Valider toutes les entrées utilisateur côté serveur (Zod recommandé)
-- Variables d'environnement dans `.env.local` — jamais en dur dans le code
+### 🔒 Sécurité : Zod, Params & Session
+- **Contrôle total sur l'Input Zod** : Obligatoire pour valider côté serveur *toute* entrée utilisateur et paramètre dynamique (`z.coerce.number().int().positive()` pour un URL param type paramètre `id`).
+- **Accessibilité du parcours d'Achat** : Le site (vitrine, tunnel de commande, produits, panier) doit rester 100% public et accessible aux *Guests*. NextAuth (via callbacks ou `useSession`) ne masque QUE ET STRICTEMENT la console Administrateur `/admin`.
+- Ne jamais coder en dur / exposer des mots de passe.
+- Variables d'environnement configurées sur `.env.local`.
 
 ### Performance
 - Optimiser les images avec `next/image`

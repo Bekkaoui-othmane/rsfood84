@@ -20,7 +20,8 @@ export default function MenuClient({ produits, categories }: MenuClientProps) {
   // --- ÉTATS LOCAUX ---
   const [selectedCategory, setSelectedCategory] = useState<string>('Tous');     
   const [produitSelectionne, setProduitSelectionne] = useState<ProduitAvecIngredients | null>(null);
-
+    // Ajout de "Tous" en première position des filtres
+    const allCategories = ['Tous', ...categories];
   // --- REGROUPEMENT DES DONNÉES ---
   // Regroupement dynamique des produits par catégorie
   const produitsParCategorie = categories.reduce((acc, cat) => {

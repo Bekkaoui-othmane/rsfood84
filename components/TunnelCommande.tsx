@@ -126,6 +126,13 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
     'Récapitulatif'
   ];
 
+  const etapesRizCrousty = [
+    'Retirer Ingrédients',
+    'Boisson',
+    '2ème boisson ?',
+    'Récapitulatif'
+  ];
+
   const getEtapes = () => {
     if (!safeProduit) return etapesBurger;
     switch (safeProduit.categorie) {
@@ -133,6 +140,7 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
       case 'tacos': return etapesTacos;
       case 'poutine': return etapesPoutine;
       case 'formule': return etapesFormule;
+      case 'riz-crousty': return etapesRizCrousty;
       default: return etapesBurger;
     }
   };
@@ -834,10 +842,12 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
     }
   };
 
-  const isReadyToSubmit = 
-    nomEtapeCourante === 'Récapitulatif' && 
+  const isReadyToSubmit =
+    nomEtapeCourante === 'Récapitulatif' &&
     (safeProduit.categorie !== 'tacos' || config.viandes.length === config.nbViandes) &&
-    (safeProduit.categorie !== 'poutine' || config.taillePoutine !== null);
+    (safeProduit.categorie !== 'poutine' || config.taillePoutine !== null) &&
+    (safeProduit.categorie !== 'riz-crousty' || true);
+    // Pas de champ obligatoire pour riz-crousty, l'étape Retirer Ingrédients est optionnelle
 
   const getSubTitleForStep = () => {
      if (nomEtapeCourante.includes('Boisson 2')) return "Envie d'une boisson supplémentaire ?";

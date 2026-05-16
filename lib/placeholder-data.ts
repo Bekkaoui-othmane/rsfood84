@@ -258,5 +258,58 @@ export const produitsInitialData = [
       { nom: "Taille XL", prix: 2.0, estSuppl: true },
       { nom: "Option Boisson", prix: 2.0, estSuppl: true }
     ]
-  }
+  },
+
+  // =====================
+  // 🍚 RIZ CROUSTY
+  // =====================
+  {
+    nom: "Riz Crousty Classique",
+    description: "Riz croustillant, poulet, sauce base maison, oignon frit",
+    prix: 10.50,
+    image: "/images/Riz/R_crousty.png",
+    categorie: "Riz Crousty",
+    ingredients: [
+      { nom: "Oignon frit", prix: 0, estSuppl: false },
+      { nom: "Sauce chili thaï", prix: 0, estSuppl: false },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Riz Crousty Spicy",
+    description: "Riz croustillant, poulet, sauce épicée maison, oignon frit",
+    prix: 10.50,
+    image: "/images/Riz/R_Spicy.png",
+    categorie: "Riz Crousty",
+    ingredients: [
+      { nom: "Oignon frit", prix: 0, estSuppl: false },
+      { nom: "Sauce chili thaï", prix: 0, estSuppl: false },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Riz Crousty Baconaise",
+    description: "Riz croustillant, poulet, sauce bacon & mayo, oignon frit",
+    prix: 10.50,
+    image: "/images/Riz/R_Bayconaise.png",
+    categorie: "Riz Crousty",
+    ingredients: [
+      { nom: "Oignon frit", prix: 0, estSuppl: false },
+      { nom: "Sauce chili thaï", prix: 0, estSuppl: false },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+  {
+    nom: "Riz Crousty Truffe",
+    description: "Riz croustillant, poulet, sauce à la truffe, oignon frit",
+    prix: 10.50,
+    image: "/images/Riz/riz_truffe.png",
+    categorie: "Riz Crousty",
+    ingredients: [
+      { nom: "Oignon frit", prix: 0, estSuppl: false },
+      { nom: "Sauce chili thaï", prix: 0, estSuppl: false },
+      { nom: "Option Boisson", prix: 2.0, estSuppl: true }
+    ]
+  },
+
 ];

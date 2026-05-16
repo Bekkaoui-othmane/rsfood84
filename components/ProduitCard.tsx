@@ -30,10 +30,14 @@ export default function ProduitCard({ produit, onBuyClick }: { produit: ProduitP
 
   return (
     <>
-      <div 
+      <div
         className="group block h-full relative cursor-pointer"
         onClick={() => {
-          router.push(`/product/${produit.id}`);
+          if (onBuyClick) {
+            onBuyClick();
+          } else {
+            router.push(`/product/${produit.id}`);
+          }
         }}
       >
         <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--orange)] hover:shadow-[0_0_20px_rgba(232,93,4,0.3)] hover:-translate-y-1 h-full flex flex-col relative z-10">
