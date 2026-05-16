@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import MenuClient from '@/components/MenuClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MenuPage() {
   // Récupération des produits disponibles depuis la base de données de manière asynchrone
   const produits = await prisma.produit.findMany({
@@ -16,7 +18,7 @@ export default async function MenuPage() {
   });
 
   // Génération dynamique de la liste des catégories uniques à partir des produits récupérés
-  const categories = [...new Set(produits.map(p => p.categorie))];
+  const categories = Array.from(new Set(produits.map(p => p.categorie)));
 
   return (
     <div className="w-full min-h-screen bg-[var(--bg-primary)] pt-24 pb-20 px-4 md:px-8">

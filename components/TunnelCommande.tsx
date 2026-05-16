@@ -292,6 +292,7 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
 
   // --- NOUVEAU RENDU DES ÉTAPES ---
   const renderContenu = () => {
+    if (!safeProduit) return null;
     switch (nomEtapeCourante) {
       case 'Frites + Boisson ?':
         return (
@@ -464,7 +465,7 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
                <button key={b.nom} onClick={() => majConfig(bKey, b.nom, true)} className={`group relative p-4 rounded-xl border text-left transition-all ${config[bKey] === b.nom ? 'border-[var(--orange)] bg-[var(--orange)]/10' : 'border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[#444] hover:bg-[#161616]'}`}>
                  <div className="flex items-center gap-4">
                    <div className="w-11 h-11 shrink-0 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--orange)] overflow-hidden">
-                     {b.image ? <img src={b.image} alt={b.nom} className="w-full h-full object-cover" /> : <Package size={20} />}
+                     <Package size={20} />
                    </div>
                    <div className="flex-1">
                      <span className="text-white font-semibold font-[family-name:var(--font-outfit)] block">{b.nom}</span>
@@ -843,6 +844,7 @@ export default function TunnelCommande({ produit, onFermer }: Props) {
   };
 
   const isReadyToSubmit =
+    !!safeProduit &&
     nomEtapeCourante === 'Récapitulatif' &&
     (safeProduit.categorie !== 'tacos' || config.viandes.length === config.nbViandes) &&
     (safeProduit.categorie !== 'poutine' || config.taillePoutine !== null) &&

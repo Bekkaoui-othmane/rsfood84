@@ -76,13 +76,14 @@ export default function ContactPage() {
                     <h3 className="text-white text-lg font-bold mb-1">Horaires d&apos;Ouverture</h3>
                     <ul className="text-gray-400 space-y-2 mt-2">
                       <li className="flex justify-between w-48 border-b border-[#333] pb-1">
-                        <span>Lundi :</span> <span className="text-[#E85D04]">Fermé</span>
+                        <span>Mardi :</span> <span className="text-[#E85D04]">Fermé</span>
                       </li>
-                      <li className="flex justify-between w-48 border-b border-[#333] pb-1">
-                        <span>Mar. - Sam. :</span> <span>18:00 - 00:00</span>
-                      </li>
-                      <li className="flex justify-between w-48 pt-1">
-                        <span>Dimanche :</span> <span className="text-[#E85D04]">Fermé</span>
+                      <li className="flex justify-between w-56 border-b border-[#333] pb-1">
+                        <span>Mer. - Lun. :</span>
+                        <span className="text-right">
+                          11h30 - 14h30<br/>
+                          18h00 - 23h00
+                        </span>
                       </li>
                     </ul>
                   </div>

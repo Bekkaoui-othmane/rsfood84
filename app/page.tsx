@@ -3,7 +3,7 @@ import Image from "next/image";
 import { MapPin, Phone } from "lucide-react";
 import { FaInstagram, FaSnapchatGhost, FaTiktok } from "react-icons/fa";
 import GoogleMap from "@/components/GoogleMap";
-import MenuCarousel from "@/public/images/Menu_formule/MenuCarousel";
+import MenuCarousel from "@/components/MenuCarousel";
 import FormulesCarousel from "@/components/FormulesCarousel";
 
 export default function Home() {
