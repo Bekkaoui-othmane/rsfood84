@@ -19,7 +19,7 @@ Développeur : Bekkaoui Othmane
 | Langage | TypeScript strict (zéro `any`) |
 | Style | Tailwind CSS (mobile-first) |
 | ORM | Prisma |
-| Base de données | MySQL (PlanetScale en prod) |
+| Base de données | SQLite en dev local (`file:./dev.db`), MySQL en production |
 | Auth admin | NextAuth.js |
 | Déploiement | Vercel |
 | State panier | Zustand + persist |
