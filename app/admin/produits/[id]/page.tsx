@@ -14,7 +14,13 @@ export default async function EditProduitPage({ params }: Props) {
 
   const produit = await prisma.produit.findUnique({
     where: { id },
-    include: { ingredients: true },
+    include: {
+      ingredients: true,
+      produitTags: {
+        include: { tag: true },
+        orderBy: { ordre: 'asc' },
+      },
+    },
   });
   if (!produit) notFound();
 

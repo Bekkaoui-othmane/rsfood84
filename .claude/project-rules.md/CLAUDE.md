@@ -145,12 +145,33 @@ model Ingredient {
   produit   Produit @relation(fields: [produitId], references: [id], onDelete: Cascade)
 }
 
+model Tag {
+  id       Int          @id @default(autoincrement())
+  nom      String       @unique
+  actif    Boolean      @default(true)  // false = barré côté client (rupture de stock)
+  produits ProduitTag[]
+}
+
+model ProduitTag {
+  id        Int     @id @default(autoincrement())
+  produit   Produit @relation(fields: [produitId], references: [id], onDelete: Cascade)
+  produitId Int
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId     Int
+  type      String  // 'description' | 'ingredient_demontable'
+  ordre     Int     @default(0)
+}
+
 model Admin {
   id       Int    @id @default(autoincrement())
   email    String @unique
   password String
 }
 ```
+
+> **Étape 5D-2** : Système Tag centralisé. `Produit.description` est conservé
+> pour rétrocompat affichage mais la source de vérité est `ProduitTag → Tag`.
+> `Ingredient` est gardé pour les données historiques — sera supprimé plus tard.
 
 ---
 

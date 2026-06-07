@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -24,15 +24,30 @@ export default function NouveauProduitPage() {
   const [error, setError] = useState('');
   const [suggestionsDescription, setSuggestionsDescription] = useState<string[]>([]);
   const [suggestionsIngredients, setSuggestionsIngredients] = useState<string[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchSuggestions = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const res = await fetch('/api/admin/suggestions');
+      const data = await res.json() as { description?: string[]; ingredients?: string[] };
+      setSuggestionsDescription(data.description ?? []);
+      setSuggestionsIngredients(data.ingredients ?? []);
+    } catch (err) {
+      console.error('Erreur refresh suggestions:', err);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetch('/api/admin/suggestions')
-      .then(res => res.json())
-      .then(data => {
-        setSuggestionsDescription(data.description ?? []);
-        setSuggestionsIngredients(data.ingredients ?? []);
-      });
-  }, []);
+    fetchSuggestions();
+  }, [fetchSuggestions]);
+
+  useEffect(() => {
+    window.addEventListener('focus', fetchSuggestions);
+    return () => window.removeEventListener('focus', fetchSuggestions);
+  }, [fetchSuggestions]);
 
   const { startUpload, isUploading } = useUploadThing('productImage', {
     onClientUploadComplete: (res) => {
@@ -111,9 +126,16 @@ export default function NouveauProduitPage() {
         Retour à la liste
       </Link>
 
-      <h1 className="text-4xl font-bold text-white mb-8 font-[family-name:var(--font-outfit)]">
+      <h1 className="text-4xl font-bold text-white mb-6 font-[family-name:var(--font-outfit)]">
         Nouveau Produit
       </h1>
+
+      <div className="bg-[var(--orange)]/10 border border-[var(--orange)]/30 text-[var(--orange)] text-sm rounded-xl px-4 py-3 flex items-center justify-between mb-8">
+        <span>Les tags (description, ingrédients) se créent dans <strong>/admin/tags</strong>.</span>
+        <Link href="/admin/tags" className="underline hover:no-underline whitespace-nowrap ml-4">
+          Gérer les tags →
+        </Link>
+      </div>
 
       <form onSubmit={handleSubmit} className="bg-[var(--bg-card)] border border-[#1F1F1F] rounded-3xl p-8 space-y-6">
 
@@ -192,7 +214,8 @@ export default function NouveauProduitPage() {
             tags={tagsDescription}
             onChange={setTagsDescription}
             suggestions={suggestionsDescription}
-            placeholder="Ex: Steak haché, Cheddar..."
+            onRefresh={fetchSuggestions}
+            refreshing={refreshing}
           />
 
           {/* Ingrédients démontables via TagInput */}
@@ -201,7 +224,8 @@ export default function NouveauProduitPage() {
             tags={tagsIngredients}
             onChange={setTagsIngredients}
             suggestions={suggestionsIngredients}
-            placeholder="Ex: Oignon, Cornichon..."
+            onRefresh={fetchSuggestions}
+            refreshing={refreshing}
           />
 
           {/* Prix + Catégorie */}

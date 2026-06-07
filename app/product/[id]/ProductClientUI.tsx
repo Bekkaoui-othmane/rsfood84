@@ -4,12 +4,15 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import type { Produit, Ingredient } from '@prisma/client';
+import type { Produit, Ingredient, ProduitTag, Tag } from '@prisma/client';
 import ImageModal from '@/components/ImageModal';
 import TunnelCommande from '@/components/TunnelCommande';
 import { mapperCategorie } from '@/lib/utils';
 
-type ProduitComplet = Produit & { ingredients: Ingredient[] };
+type ProduitComplet = Produit & {
+  ingredients: Ingredient[];
+  produitTags: (ProduitTag & { tag: Tag })[];
+};
 
 interface Props {
   produit: ProduitComplet;
@@ -104,10 +107,9 @@ export default function ProductClientUI({ produit }: Props) {
             prixBase: produit.prix,
             description: produit.description || '',
             categorie: mapperCategorie(produit.categorie),
-            // Injection dynamique des ingrédients démontables via Prisma
-            ingredientsDemontables: produit.ingredients
-              .filter((i: Ingredient) => !i.estSuppl)
-              .map((i: Ingredient) => i.nom),
+            ingredientsDemontables: produit.produitTags
+              .filter(pt => pt.type === 'ingredient_demontable')
+              .map(pt => pt.tag.nom),
           }}
           onFermer={() => {
             setIsTunnelOpen(false);

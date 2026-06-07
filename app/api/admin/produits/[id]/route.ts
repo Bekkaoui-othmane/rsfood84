@@ -14,6 +14,22 @@ const updateSchema = z.object({
   ingredientsDemontables: z.array(z.string()).optional(),
 }).strict();
 
+async function relierTags(
+  produitId: number,
+  noms: string[],
+  type: 'description' | 'ingredient_demontable'
+) {
+  await prisma.produitTag.deleteMany({ where: { produitId, type } });
+
+  for (let i = 0; i < noms.length; i++) {
+    const tag = await prisma.tag.findUnique({ where: { nom: noms[i] } });
+    if (!tag) throw new Error(`Tag "${noms[i]}" introuvable — crée-le dans /admin/tags`);
+    await prisma.produitTag.create({
+      data: { produitId, tagId: tag.id, type, ordre: i },
+    });
+  }
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -27,29 +43,38 @@ export async function PATCH(
   try {
     const body = await req.json();
     const parsed = updateSchema.safeParse(body);
-    if (!parsed.success) return NextResponse.json({ error: 'Données invalides', details: parsed.error.issues }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Données invalides', details: parsed.error.issues },
+        { status: 400 }
+      );
+    }
 
-    const { ingredientsDemontables, ...autresChamps } = parsed.data;
+    const { description, ingredientsDemontables, ...campsScalaires } = parsed.data;
 
     const produit = await prisma.produit.update({
       where: { id },
       data: {
-        ...autresChamps,
-        ...(ingredientsDemontables !== undefined && {
-          ingredients: {
-            deleteMany: { estSuppl: false },
-            create: ingredientsDemontables.map(nom => ({
-              nom,
-              prix: 0,
-              estSuppl: false,
-            })),
-          },
-        }),
+        ...campsScalaires,
+        ...(description !== undefined && { description }),
       },
     });
 
+    if (description !== undefined) {
+      const tags = description.split(',').map(t => t.trim()).filter(Boolean);
+      await relierTags(id, tags, 'description');
+    }
+
+    if (ingredientsDemontables !== undefined) {
+      await relierTags(id, ingredientsDemontables, 'ingredient_demontable');
+    }
+
     return NextResponse.json(produit);
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Tag "')) {
+      return NextResponse.json({ error: error.message }, { status: 422 });
+    }
+    console.error(error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

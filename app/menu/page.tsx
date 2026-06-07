@@ -10,7 +10,8 @@ export default async function MenuPage() {
       disponible: true 
     },
     include: {
-      ingredients: true // Récupération des ingrédients rattachés au produit
+      ingredients: true,
+      produitTags: { include: { tag: true }, orderBy: { ordre: 'asc' } },
     },
     orderBy: {
       categorie: 'asc' // Regroupement alphabétique

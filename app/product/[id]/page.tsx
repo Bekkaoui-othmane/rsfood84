@@ -15,7 +15,10 @@ export default async function ProductPage({ params }: { params: { id: string } }
   // Récupération en base de données du produit et de ses ingrédients attachés
   const produit = await prisma.produit.findUnique({
     where: { id: parsed.data },
-    include: { ingredients: true }
+    include: {
+      ingredients: true,
+      produitTags: { include: { tag: true }, orderBy: { ordre: 'asc' } },
+    },
   });
 
   if (!produit) {

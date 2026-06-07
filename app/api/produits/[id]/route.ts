@@ -15,7 +15,10 @@ export async function GET(
 
   const produit = await prisma.produit.findUnique({
     where: { id: parsed.data },
-    include: { ingredients: true },
+    include: {
+      ingredients: true,
+      produitTags: { include: { tag: true }, orderBy: { ordre: 'asc' } },
+    },
   });
 
   if (!produit) {

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import type { Produit, Ingredient } from '@prisma/client';
+import type { Produit, Ingredient, ProduitTag, Tag } from '@prisma/client';
 import ProduitCard from '@/components/ProduitCard';
 import TunnelCommande from '@/components/TunnelCommande';
 import { mapperCategorie } from '@/lib/utils';
 
-// Typage étendu pour inclure la relation jointe via Prisma (include: { ingredients: true })
 type ProduitAvecIngredients = Produit & {
   ingredients: Ingredient[];
+  produitTags: (ProduitTag & { tag: Tag })[];
 };
 
 interface MenuClientProps {
@@ -114,9 +114,9 @@ export default function MenuClient({ produits, categories }: MenuClientProps) {
             description: produitSelectionne.description || '',
             categorie: mapperCategorie(produitSelectionne.categorie),
             // Extraction en base de données dynamique des ingrédients démontables
-            ingredientsDemontables: produitSelectionne.ingredients
-              .filter((i: Ingredient) => !i.estSuppl)
-              .map((i: Ingredient) => i.nom)
+            ingredientsDemontables: produitSelectionne.produitTags
+              .filter(pt => pt.type === 'ingredient_demontable')
+              .map(pt => pt.tag.nom)
           }}
           onFermer={() => setProduitSelectionne(null)}
         />

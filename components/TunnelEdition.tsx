@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react';
 import { usePanierStore } from '@/store/panierStore';
 import TunnelCommande from '@/components/TunnelCommande';
 import { mapperCategorie } from '@/lib/utils';
-import type { Produit, Ingredient } from '@prisma/client';
+import type { Produit, Ingredient, ProduitTag, Tag } from '@prisma/client';
 
-type ProduitComplet = Produit & { ingredients: Ingredient[] };
+type ProduitComplet = Produit & {
+  ingredients: Ingredient[];
+  produitTags: (ProduitTag & { tag: Tag })[];
+};
 
 export default function TunnelEdition() {
   const articleEnEdition = usePanierStore((state) => state.articleEnEdition);
@@ -57,9 +60,9 @@ export default function TunnelEdition() {
         description: produit.description || '',
         image: produit.image || '',
         categorie: mapperCategorie(produit.categorie),
-        ingredientsDemontables: produit.ingredients
-          .filter((i) => !i.estSuppl)
-          .map((i) => i.nom),
+        ingredientsDemontables: produit.produitTags
+          .filter(pt => pt.type === 'ingredient_demontable')
+          .map(pt => pt.tag.nom),
       }}
       configInitiale={articleEnEdition.config}
       articleIdEnEdition={articleEnEdition.id}
